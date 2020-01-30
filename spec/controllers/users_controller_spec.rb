@@ -77,4 +77,19 @@ RSpec.describe UsersController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE destroy' do
+    let!(:user) { User.create(name: 'John', email: 'john@example.com', password: '123qwe',) }
+    
+    it 'deletes user' do
+      expect do
+          delete :destroy, params: { id: user.id }
+        end.to change {User.count}.by(-1)
+    end
+
+    it 'returns ok' do
+      delete :destroy, params: { id: user.id }
+      expect(response).to have_http_status(:ok)
+    end
+  end
 end
