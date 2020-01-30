@@ -20,4 +20,18 @@ RSpec.describe User, type: :model do
     user = User.create(name: "name", email: "email@example.com", password: "passwd")
     expect(user.referral_code).to be
   end
+
+  it "prevents email from being changed" do
+    user = User.create(name: "name", email: "email@example.com", password: "passwd")
+    user.email = "other@example.com"
+    expect(user).not_to be_valid
+    expect(user.update(email: "another@example.com")).to be false
+  end
+
+  it "prevents referral_code from being changed" do
+    user = User.create(name: "name", email: "email@example.com", password: "passwd")
+    user.referral_code = "123123123"
+    expect(user).not_to be_valid
+    expect(user.update(referral_code: "098098098")).to be false
+  end
 end

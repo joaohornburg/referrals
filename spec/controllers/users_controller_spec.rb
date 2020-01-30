@@ -122,5 +122,12 @@ RSpec.describe UsersController, type: :controller do
         expect(response).to have_http_status(:not_found)
       end
     end
+
+    context 'when trying to change email or referral_code' do
+      xit 'return unprocessable_entity' do
+        put :update, params: { id: user.id, email: "x@e.com", referral_code: "2" }
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
   end
 end
