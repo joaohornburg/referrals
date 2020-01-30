@@ -45,9 +45,35 @@ RSpec.describe UsersController, type: :controller do
         }
       end
 
-      it 'is unprocessable_entity' do
+      it 'returns unprocessable_entity' do
         post :create, params: invalid_params
         expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+  end
+
+  describe 'GET show' do
+    context 'when user exists' do
+      let(:user) { User.create(name: 'John', email: 'john@example.com', password: '123qwe',) }
+
+      it 'renders user as JSON' do
+        get :show, params: { id: user.id }
+        parsed_body = JSON.parse(response.body)
+        expect(parsed_body['name']).to eq user.name
+        expect(parsed_body['email']).to eq user.email
+        expect(parsed_body['password']).to eq user.password
+        expect(parsed_body['id']).to eq user.id
+        expect(parsed_body['referral_code']).to eq user.referral_code
+        expect(parsed_body['balance']).to eq user.balance.to_s
+        expect(parsed_body['created_at']).to eq user.created_at.as_json
+        expect(parsed_body['updated_at']).to eq user.updated_at.as_json
+      end
+    end
+
+    context "when user doesn't exist" do
+      it 'returns not_found' do
+        get :show, params: { id: 8976 }
+        expect(response).to have_http_status(:not_found)
       end
     end
   end
