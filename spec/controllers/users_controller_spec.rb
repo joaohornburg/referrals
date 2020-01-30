@@ -89,7 +89,38 @@ RSpec.describe UsersController, type: :controller do
 
     it 'returns ok' do
       delete :destroy, params: { id: user.id }
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:no_content)
+    end
+  end
+
+  describe 'PUT update' do
+    let(:user) { User.create(name: 'John', email: 'john@example.com', password: '123qwe',) }
+
+    context 'with valid params' do
+      let(:valid_params) do
+        {
+            name: 'John Edwards',
+            password: '123qwe123qwe',
+        }
+      end
+
+      it 'is successful' do
+        put :update, params: valid_params.merge({ id: user.id })
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'updates user' do
+        expect do
+          put :update, params: valid_params.merge({ id: user.id })
+        end.to change { User.first.name }.from(user.name).to(valid_params[:name])
+      end
+    end
+
+    context "when user doesn't exist" do
+      it 'returns not_found' do
+        put :update, params: { id: 8976 }
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 end
