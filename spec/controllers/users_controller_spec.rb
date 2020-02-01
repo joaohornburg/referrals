@@ -29,7 +29,7 @@ RSpec.describe UsersController, type: :controller do
         expect(parsed_body['email']).to eq valid_params[:email]
         expect(parsed_body['password']).to eq valid_params[:password]
         expect(parsed_body['id']).to be
-        expect(parsed_body['referral_code']).to be
+        expect(parsed_body['referrer_code']).to be
         expect(parsed_body['balance']).to be
         expect(parsed_body['created_at']).to be
         expect(parsed_body['updated_at']).to be
@@ -41,7 +41,7 @@ RSpec.describe UsersController, type: :controller do
         {
           name: 'John',
           password: '123qwe',
-          referral_code: 'xlkajd0'
+          referrer_code: 'xlkajd0'
         }
       end
 
@@ -63,7 +63,7 @@ RSpec.describe UsersController, type: :controller do
         expect(parsed_body['email']).to eq user.email
         expect(parsed_body['password']).to eq user.password
         expect(parsed_body['id']).to eq user.id
-        expect(parsed_body['referral_code']).to eq user.referral_code
+        expect(parsed_body['referrer_code']).to eq user.referrer_code
         expect(parsed_body['balance']).to eq user.balance.to_s
         expect(parsed_body['created_at']).to eq user.created_at.as_json
         expect(parsed_body['updated_at']).to eq user.updated_at.as_json
@@ -123,9 +123,9 @@ RSpec.describe UsersController, type: :controller do
       end
     end
 
-    context 'when trying to change email or referral_code' do
+    context 'when trying to change email or referrer_code' do
       xit 'return unprocessable_entity' do
-        put :update, params: { id: user.id, email: "x@e.com", referral_code: "2" }
+        put :update, params: { id: user.id, email: "x@e.com", referrer_code: "2" }
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
