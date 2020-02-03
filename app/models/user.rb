@@ -1,7 +1,9 @@
 class User < ApplicationRecord
   before_create :generate_referrer_code
   validates_presence_of :name, :email, :password
+  validates :email, uniqueness: true
   validate :readonly_attributes
+  has_many :referrals, foreign_key: :referring_user_id
 
   private
 
