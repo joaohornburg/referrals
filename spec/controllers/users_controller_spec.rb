@@ -34,6 +34,27 @@ RSpec.describe UsersController, type: :controller do
         expect(parsed_body['created_at']).to be
         expect(parsed_body['updated_at']).to be
       end
+
+      context 'when there is a referral code' do
+        let(:user_creator_double) { instance_double(UserCreator, create: User.new) }
+
+        let(:valid_params) do
+          {
+            name: 'John',
+            email: 'john@example.com',
+            password: '123qwe',
+            referral_code: '123098-aoiu8s7-1o2uhfdbksk'
+          }
+        end
+
+        it 'sends this code to UserCreator' do
+          expect(UserCreator)
+            .to receive(:new)
+            .with({user: valid_params.reject {|k,_| k == :referral_code}, referral_code: valid_params[:referral_code]})
+            .and_return(user_creator_double)
+          post :create, params: valid_params
+        end
+      end
     end
 
     context 'with invalid params' do

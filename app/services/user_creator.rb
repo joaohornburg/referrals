@@ -6,7 +6,7 @@ class UserCreator
 
   def create
     user = User.new(@user)
-    return user.errors.full_messages unless user.valid?
+    return user unless user.valid?
     
     if  @referral_code && referrer
       user.balance = 10.0
@@ -16,6 +16,7 @@ class UserCreator
       end
     end
     user.save
+    user
   end
 
   private

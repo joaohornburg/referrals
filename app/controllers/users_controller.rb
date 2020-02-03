@@ -1,7 +1,7 @@
 class UsersController < ApplicationController  
   def create
-    user = User.new(create_user_params)
-    if user.save
+    user = UserCreator.new(user: create_user_params.to_h, referral_code: referral_code_params[:referral_code]).create
+    if user.valid? && user.persisted?
       render json: user, status: :created
     else
       render json: { errors: user.errors.full_messages },
@@ -39,6 +39,10 @@ class UsersController < ApplicationController
 
   def create_user_params
     params.permit(:name, :email, :password)
+  end
+
+  def referral_code_params
+    params.permit(:referral_code)
   end
 
   def update_user_params

@@ -28,9 +28,9 @@ RSpec.describe UserCreator do
         expect(User.last.balance).to eq 0.0
       end
 
-      it "doesn't return any error" do
-        errors = UserCreator.new(user: user_params).create
-        expect(errors).to be true
+      it "returns a valid user" do
+        user = UserCreator.new(user: user_params).create
+        expect(user).to be_valid
       end
     end
 
@@ -132,9 +132,10 @@ RSpec.describe UserCreator do
       end.not_to change { Referral.count }  
     end
 
-    it 'returns the correct error message' do
-      errors = UserCreator.new(user: user_params).create
-      expect(errors).to eq ["Email has already been taken"]
+    it 'returns invalid user' do
+      user = UserCreator.new(user: user_params).create
+      expect(user).not_to be_valid
+      expect(user.errors.full_messages).to eq ["Email has already been taken"]
     end
   end
 
@@ -152,9 +153,10 @@ RSpec.describe UserCreator do
       end.not_to change { Referral.count }  
     end
 
-    it 'returns the correct error message' do
-      errors = UserCreator.new(user: user_params).create
-      expect(errors).to eq ["Name can't be blank"]
+    it 'returns an invalid user' do
+      user = UserCreator.new(user: user_params).create
+      expect(user).not_to be_valid
+      expect(user.errors.full_messages).to eq ["Name can't be blank"]
     end  
   end
 end
