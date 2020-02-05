@@ -5,6 +5,14 @@ class User < ApplicationRecord
   validate :readonly_attributes
   has_many :referrals, foreign_key: :referring_user_id
 
+  def public_attributes
+    {
+      name: self.name,
+      email: self.email,
+      created_at: self.created_at
+    }
+  end
+
   private
 
   def generate_referrer_code
