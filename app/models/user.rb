@@ -1,8 +1,12 @@
 class User < ApplicationRecord
+  has_secure_password
   before_create :generate_referrer_code
+
   validates_presence_of :name, :email, :password
   validates :email, uniqueness: true
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validate :readonly_attributes
+
   has_many :referrals, foreign_key: :referring_user_id
 
   def public_attributes
