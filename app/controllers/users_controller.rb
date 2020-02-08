@@ -1,4 +1,6 @@
 class UsersController < ApplicationController  
+  before_action :authorize_request, except: :create
+  
   def create
     user = UserCreator.new(user: create_user_params.to_h, referral_code: referral_code_params[:referral_code]).create
     if user.valid? && user.persisted?

@@ -1,4 +1,6 @@
 class ReferralsController < ApplicationController
+  before_action :authorize_request
+
   def index
     user = User.find_by(id: user_params[:user_id])
     head :not_found and return unless user

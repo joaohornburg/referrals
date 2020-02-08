@@ -5,6 +5,10 @@ RSpec.describe ReferralsController, type: :controller do
     context 'when user exists' do
       let!(:user) { User.create(name: 'User Name', email: 'email@example.com', password: 'password') }
     
+      before do
+        allow(JsonWebToken).to receive(:decode).and_return({user_id: user.id})
+      end
+
       it "returns http success" do
         get :index, params: { user_id: user.id }
         expect(response).to have_http_status(:success)
@@ -43,7 +47,7 @@ RSpec.describe ReferralsController, type: :controller do
     context 'when user doesnt exist' do
       it 'returns not_found' do
         response = get :index, params: { user_id: 123 }
-        expect(response).to have_http_status :not_found
+        expect(response).to have_http_status :unauthorized
       end
     end
   end

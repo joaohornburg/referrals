@@ -53,13 +53,13 @@ RSpec.describe UserCreator do
 
         context 'and this user had 4 referrals already' do
           before do
-            referred1 = User.create!(name: "a", password: "a", email: "a@example.org")
+            referred1 = User.create!(name: "a", password: "00000a", email: "a@example.org")
             referrer.referrals << Referral.new(referred_user: referred1)
-            referred1 = User.create!(name: "b", password: "b", email: "b@example.org")
+            referred1 = User.create!(name: "b", password: "00000b", email: "b@example.org")
             referrer.referrals << Referral.new(referred_user: referred1)
-            referred1 = User.create!(name: "c", password: "c", email: "c@example.org")
+            referred1 = User.create!(name: "c", password: "00000c", email: "c@example.org")
             referrer.referrals << Referral.new(referred_user: referred1)
-            referred1 = User.create!(name: "d", password: "d", email: "d@example.org")
+            referred1 = User.create!(name: "d", password: "00000d", email: "d@example.org")
             referrer.referrals << Referral.new(referred_user: referred1)
             referrer.save!
           end
@@ -72,15 +72,15 @@ RSpec.describe UserCreator do
 
         context 'and this user had 5 referrals already' do
           before do
-            referred1 = User.create!(name: "a", password: "a", email: "a@example.org")
+            referred1 = User.create!(name: "a", password: "00000a", email: "a@example.org")
             referrer.referrals << Referral.new(referred_user: referred1)
-            referred1 = User.create!(name: "b", password: "b", email: "b@example.org")
+            referred1 = User.create!(name: "b", password: "00000b", email: "b@example.org")
             referrer.referrals << Referral.new(referred_user: referred1)
-            referred1 = User.create!(name: "c", password: "c", email: "c@example.org")
+            referred1 = User.create!(name: "c", password: "00000c", email: "c@example.org")
             referrer.referrals << Referral.new(referred_user: referred1)
-            referred1 = User.create!(name: "d", password: "d", email: "d@example.org")
+            referred1 = User.create!(name: "d", password: "00000d", email: "d@example.org")
             referrer.referrals << Referral.new(referred_user: referred1)
-            referred1 = User.create!(name: "e", password: "e", email: "e@example.org")
+            referred1 = User.create!(name: "e", password: "00000e", email: "e@example.org")
             referrer.referrals << Referral.new(referred_user: referred1)
             referrer.save!
           end

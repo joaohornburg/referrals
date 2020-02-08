@@ -27,7 +27,6 @@ RSpec.describe UsersController, type: :controller do
         parsed_body = JSON.parse(response.body)
         expect(parsed_body['name']).to eq valid_params[:name]
         expect(parsed_body['email']).to eq valid_params[:email]
-        expect(parsed_body['password']).to eq valid_params[:password]
         expect(parsed_body['id']).to be
         expect(parsed_body['referrer_code']).to be
         expect(parsed_body['balance']).to be
@@ -77,12 +76,15 @@ RSpec.describe UsersController, type: :controller do
     context 'when user exists' do
       let(:user) { User.create(name: 'John', email: 'john@example.com', password: '123qwe',) }
 
+      before do
+        allow(JsonWebToken).to receive(:decode).and_return({user_id: user.id})
+      end
+
       it 'renders user as JSON' do
         get :show, params: { id: user.id }
         parsed_body = JSON.parse(response.body)
         expect(parsed_body['name']).to eq user.name
         expect(parsed_body['email']).to eq user.email
-        expect(parsed_body['password']).to eq user.password
         expect(parsed_body['id']).to eq user.id
         expect(parsed_body['referrer_code']).to eq user.referrer_code
         expect(parsed_body['balance']).to eq user.balance.to_s
@@ -94,7 +96,7 @@ RSpec.describe UsersController, type: :controller do
     context "when user doesn't exist" do
       it 'returns not_found' do
         get :show, params: { id: 8976 }
-        expect(response).to have_http_status(:not_found)
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end
@@ -102,6 +104,10 @@ RSpec.describe UsersController, type: :controller do
   describe 'DELETE destroy' do
     let!(:user) { User.create(name: 'John', email: 'john@example.com', password: '123qwe',) }
     
+    before do
+      allow(JsonWebToken).to receive(:decode).and_return({user_id: user.id})
+    end
+
     it 'deletes user' do
       expect do
           delete :destroy, params: { id: user.id }
@@ -115,7 +121,11 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe 'PUT update' do
-    let(:user) { User.create(name: 'John', email: 'john@example.com', password: '123qwe',) }
+    let!(:user) { User.create(name: 'John', email: 'john@example.com', password: '123qwe',) }
+
+    before do
+      allow(JsonWebToken).to receive(:decode).and_return({user_id: user.id})
+    end
 
     context 'with valid params' do
       let(:valid_params) do
@@ -141,13 +151,6 @@ RSpec.describe UsersController, type: :controller do
       it 'returns not_found' do
         put :update, params: { id: 8976 }
         expect(response).to have_http_status(:not_found)
-      end
-    end
-
-    context 'when trying to change email or referrer_code' do
-      xit 'return unprocessable_entity' do
-        put :update, params: { id: user.id, email: "x@e.com", referrer_code: "2" }
-        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end
